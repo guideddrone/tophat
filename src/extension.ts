@@ -95,7 +95,17 @@ export default class TopHat extends Extension {
       const name = new File(`${base}${filename}/name`).readSync();
       if (name === 'coretemp') {
         // Intel CPUs
-        const prefix = new File(`${base}${filename}/temp2_label`).readSync();
+        const sensor = new File(`${base}${filename}/`);
+        // Just get the first one. I am not a sensor expert but this seems to work.
+        const temp_label = sensor
+          .listSync()
+          .filter((temp) => temp.startsWith(`temp`) && temp.endsWith(`label`))
+          .sort()[0];
+        const temp_input = sensor
+          .listSync()
+          .filter((temp) => temp.startsWith(`temp`) && temp.endsWith(`input`))
+          .sort()[0];
+        const prefix = new File(`${base}${filename}/` + temp_label).readSync();
         let id = 0;
         if (prefix) {
           const m = prefix.match(/Package id\s*(\d+)/);
@@ -103,7 +113,7 @@ export default class TopHat extends Extension {
             id = parseInt(m[1]);
           }
         }
-        const inputPath = `${base}${filename}/temp2_input`;
+        const inputPath = `${base}${filename}/` + temp_input;
         if (new File(inputPath).exists()) {
           tempMonitors.set(id, inputPath);
         }
