@@ -95,7 +95,7 @@ export default class TopHat extends Extension {
       const name = new File(`${base}${filename}/name`).readSync();
       if (name === 'coretemp') {
         // Intel CPUs
-        const prefix = new File(`${base}${filename}/temp1_label`).readSync();
+        const prefix = new File(`${base}${filename}/temp2_label`).readSync();
         let id = 0;
         if (prefix) {
           const m = prefix.match(/Package id\s*(\d+)/);
@@ -103,7 +103,7 @@ export default class TopHat extends Extension {
             id = parseInt(m[1]);
           }
         }
-        const inputPath = `${base}${filename}/temp1_input`;
+        const inputPath = `${base}${filename}/temp2_input`;
         if (new File(inputPath).exists()) {
           tempMonitors.set(id, inputPath);
         }
